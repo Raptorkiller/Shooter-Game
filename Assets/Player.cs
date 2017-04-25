@@ -4,34 +4,32 @@ using UnityEngine;
 
 public class Player : MonoBehaviour {
 
+    public int ammoCarried;
 
-    public GameObject bullet;
-    public float RPM;
-    private float roundsPerSecond;
-    private float fireRate;
-    public Vector3 offSet;
-    private Camera eyes;
+    private Weapon activeWeapon;
+
     private float timer;
-    
+    private float roundsPerSecond;
     // Use this for initialization
-	void Start () {
-        eyes = GetComponentInChildren<Camera>();
-        roundsPerSecond = 60f / RPM;
-        Debug.Log(roundsPerSecond);
-	}
+    void Start () {
+        activeWeapon = GetComponentInChildren<Weapon>();
+        roundsPerSecond = 60f / activeWeapon.RPM;
+        timer = 0;
+    }
 	
 	// Update is called once per frame
 	void Update () {
 
         timer -= Time.deltaTime;
-        if (Input.GetButton("Fire1") && timer <=0)
+        Debug.Log(timer -= Time.deltaTime);
+        if (Input.GetButton("Fire1") && timer <= 0)
         {
-            Instantiate(bullet, eyes.transform.position + offSet, eyes.transform.rotation);
-            timer = roundsPerSecond; ;
+            activeWeapon.Shoot();
+            timer = roundsPerSecond;
         }
-        else
+       if(Input.GetButtonDown("Reload") && ammoCarried != 0)
         {
-            
+            ammoCarried = activeWeapon.Reload(ammoCarried);
         }
 	}
 }
