@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class BulletSpawner : MonoBehaviour {
 
-    public Vector3 offset;
+    //public Vector3 offset;
     public GameObject bullet;
+    
     // Use this for initialization
     void Start () {
 		
@@ -18,6 +19,6 @@ public class BulletSpawner : MonoBehaviour {
 
     public void SpawnBullet()
     {
-        Instantiate(bullet, transform.position, transform.rotation);
+        Instantiate(bullet,transform.position,transform.rotation);
     }
 }

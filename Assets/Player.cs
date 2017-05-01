@@ -10,6 +10,8 @@ public class Player : MonoBehaviour {
 
     private float timer;
     private float roundsPerSecond;
+    public bool reloading = false;
+
     // Use this for initialization
     void Start () {
         activeWeapon = GetComponentInChildren<Weapon>();
@@ -20,16 +22,23 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
+        if (Input.GetButtonDown("Reload") && ammoCarried != 0)
+        {
+            reloading = true;
+            StartCoroutine(activeWeapon.Reload());
+            
+        } 
+
+
         timer -= Time.deltaTime;
         Debug.Log(timer -= Time.deltaTime);
-        if (Input.GetButton("Fire1") && timer <= 0)
+        if (Input.GetButton("Fire1") && timer <= 0 && !reloading)
         {
             activeWeapon.Shoot();
             timer = roundsPerSecond;
         }
-       if(Input.GetButtonDown("Reload") && ammoCarried != 0)
-        {
-            ammoCarried = activeWeapon.Reload(ammoCarried);
-        }
+       
 	}
+
+   
 }

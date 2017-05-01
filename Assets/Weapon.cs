@@ -7,10 +7,18 @@ public class Weapon : MonoBehaviour {
     public float RPM;
     public int ammo;
     public int ammoClipSize;
-    public Vector3 offSet;
+    
+    public ParticleSystem muzzleFlash;
+    public AudioClip shot;
+    public AudioClip reload;
    
     private BulletSpawner bulletSpawner;
     private Player player;
+    private RaycastHit hit;
+    private AudioSource clip;
+    //private float reloadTimer;
+    
+
 
     
 
@@ -18,6 +26,9 @@ public class Weapon : MonoBehaviour {
     void Start () {
         bulletSpawner = GetComponentInChildren<BulletSpawner>();
         player = FindObjectOfType<Player>();
+        clip = GetComponent<AudioSource>();
+        //reloadTimer = reload.length;
+        
     }
 	
 	// Update is called once per frame
@@ -31,21 +42,38 @@ public class Weapon : MonoBehaviour {
         {
             ammo--;
             bulletSpawner.SpawnBullet();
+            muzzleFlash.Play();
+            clip.clip = shot;
+            clip.Play();
         }
         
     }
 
-    public int Reload(int reload)
+
+
+    public IEnumerator Reload()
     {
-       if(reload >= ammoClipSize)
+
+
+        clip.clip = reload;
+        clip.Play();
+
+        if (player.ammoCarried >= ammoClipSize)
         {
+            yield return new WaitForSeconds(reload.length);
             ammo = ammoClipSize;
-            return reload - ammoClipSize;
+            player.ammoCarried = player.ammoCarried - ammoClipSize;
+            player.reloading = false;
+
         }
         else
         {
-            ammo = reload;
-            return reload = 0;
+            yield return new WaitForSeconds(reload.length);
+            ammo = player.ammoCarried;
+            player.ammoCarried = 0;
+            player.reloading = false;
         }
     }
+
+
 }
